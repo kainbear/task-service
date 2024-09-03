@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:16
+    container_name: postgres-tasks
+    environment:
+      POSTGRES_USER: kainbear
+      POSTGRES_PASSWORD: sups4
+      POSTGRES_DB: tasks
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432" # Использование порта 5434
+
+  web:
+    build: .
+    container_name: fastapi-app-task
+    command: uvicorn main:app --host 0.0.0.0 --port 8002 --reload
+    ports:
+      - "8002:8002"
+    depends_on:
+      - postgres-db
+
+volumes:
+  postgres-data:
